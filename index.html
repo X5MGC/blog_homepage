@@ -1,0 +1,537 @@
+<html lang="zh-CN"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>个人博客引导页</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+            
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4F46E5', // 靛蓝色作为主色调
+                        secondary: '#10B981', // 绿色作为辅助色
+                        accent: '#EC4899', // 粉色作为强调色
+                        light: '#F9FAFB', // 浅色背景
+                        dark: '#1F2937', // 深色文本
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    spacing: {
+                        '128': '32rem',
+                    },
+                    screens: {
+                        'xs': '360px',
+                        'sm': '640px',
+                        'md': '768px',
+                        'lg': '1024px',
+                        'xl': '1280px',
+                        '2xl': '1536px',
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .bg-blur {
+                backdrop-filter: blur(12px);
+            }
+            .rotate-on-hover {
+                transition: transform 0.5s ease;
+            }
+            .rotate-on-hover:hover {
+                transform: rotate(360deg);
+            }
+            .btn-hover {
+                transition: all 0.3s ease;
+            }
+            .btn-hover:hover {
+                transform: translateX(8px);
+                box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.2);
+            }
+            .text-balance {
+                text-wrap: balance;
+            }
+            .card-hover {
+                transition: all 0.3s ease;
+            }
+            .card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            }
+            .theme-panel {
+                transition: all 0.3s ease-in-out;
+                transform-origin: bottom right;
+            }
+            .glass-effect {
+                background: rgba(255, 255, 255, 0.7);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.18);
+            }
+            .no-scrollbar::-webkit-scrollbar {
+                display: none;
+            }
+            .no-scrollbar {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+        }
+    </style>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        
+        .page-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .main-content {
+            flex: 1;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto;
+        }
+        
+        body {
+            background-image: url('https://x5mgc.com/pic/1.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            backdrop-filter: blur(0px);
+        }
+        
+        /* 美化滚动条 */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+        
+        /* 深色模式下的滚动条 */
+        @media (prefers-color-scheme: dark) {
+            ::-webkit-scrollbar {
+                display: none;
+            }
+        }
+        
+        /* 上下滚动式栏样式 */
+        .vertical-slider {
+            position: relative;
+            height: clamp(100px, 15vh, 150px);
+            margin-bottom: clamp(1rem, 3vw, 2rem);
+            overflow: hidden;
+            border-radius: clamp(0.5rem, 1vw, 0.75rem);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: none;
+        }
+        
+        .vertical-slides {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+        }
+        
+        .vertical-slide {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: clamp(1rem, 2vw, 1.5rem);
+            position: relative;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .vertical-slide-content {
+            background: rgba(255, 255, 255, 0.85);
+            padding: clamp(0.75rem, 1.5vw, 1.25rem);
+            border-radius: clamp(0.5rem, 1vw, 0.75rem);
+            width: 100%;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .vertical-slide h3 {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            font-weight: 600;
+            margin-bottom: clamp(0.25rem, 0.5vw, 0.5rem);
+            color: #1F2937;
+            display: flex;
+            align-items: center;
+        }
+        
+        .vertical-slide h3 i {
+            margin-right: clamp(0.5rem, 1vw, 0.75rem);
+        }
+        
+        .vertical-slide p {
+            font-size: clamp(0.8rem, 1.5vw, 0.95rem);
+            color: #4B5563;
+        }
+        
+        /* 指示点 */
+        .vertical-dots {
+            position: absolute;
+            right: clamp(0.75rem, 1.5vw, 1.25rem);
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+        }
+        
+        .vertical-dot {
+            width: clamp(0.375rem, 0.75vw, 0.5rem);
+            height: clamp(0.375rem, 0.75vw, 0.5rem);
+            border-radius: 50%;
+            background-color: rgba(79, 70, 229, 0.3);
+            cursor: pointer;
+            margin: clamp(0.125rem, 0.25vw, 0.25rem) 0;
+            transition: background-color 0.3s;
+        }
+        
+        .vertical-dot.active {
+            background-color: #4F46E5;
+        }
+        
+        /* 头像区域 */
+        .avatar-container {
+            width: clamp(10rem, 25vw, 13rem);
+            height: clamp(10rem, 25vw, 13rem);
+        }
+        
+        /* banner栏样式 */
+        .banner-container {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 1rem;
+        }
+        
+        .banner-slides {
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.5s ease;
+            height: 100%;
+        }
+        
+        .banner-slide {
+            min-height: 100%;
+            width: 100%;
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+        
+        /* banner指示点 */
+        .banner-dots {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+        }
+        
+        .banner-dot {
+            width: 0.5rem;
+            height: 0.5rem;
+            border-radius: 50%;
+            background-color: rgba(79, 70, 229, 0.3);
+            cursor: pointer;
+            margin: 0.25rem 0;
+            transition: background-color 0.3s;
+        }
+        
+        .banner-dot.active {
+            background-color: #4F46E5;
+        }
+        
+        /* 个性签名 */
+        .signature {
+            font-size: clamp(1.5rem, 4vw, 2.25rem);
+        }
+        
+        /* 按钮容器 */
+        .btn-container {
+            max-width: clamp(18rem, 40vw, 25rem);
+        }
+        
+        /* 卡片内边距 */
+        .card-padding {
+            padding: clamp(1.5rem, 3vw, 2.5rem);
+        }
+        
+        /* 关注我图标大小 */
+        .social-icon {
+            width: clamp(2.5rem, 5vw, 3rem);
+            height: clamp(2.5rem, 5vw, 3rem);
+        }
+        
+        /* 页面布局优化 */
+        .page-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-light overflow-x-hidden" id="body">
+    <div class="page-container">
+        <main class="main-content">
+            <div class="container mx-auto container-responsive padding-responsive flex-grow flex flex-col md:flex-row items-center justify-center">
+                <!-- 左侧内容：头像、签名、按钮 -->
+                <div class="w-full md:w-2/5 flex flex-col items-center md:items-start md:pr-8 mb-10 md:mb-0" style="margin-top: -20px;">
+                    <!-- 头像区域 -->
+                    <div class="relative mb-8 w-full">
+                        <div class="avatar-container mx-auto md:mx-0 rounded-full bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center p-2 shadow-lg">
+                            <img src="https://q1.qlogo.cn/g?b=qq&nk=1&s=640" alt="博主头像" class="w-full h-full object-cover rounded-full rotate-on-hover border-4 border-white">
+                        </div>
+                    </div>
+                    <!-- 个性签名 -->
+                    <h2 class="signature font-bold mb-8 text-center md:text-left tracking-tight leading-tight glass-effect p-6 rounded-xl shadow-lg card-hover">
+                        <span class="text-primary">何须</span>仰望别人，<span class="text-secondary">自己</span>亦是风景
+                    </h2>
+                    
+                    <!-- 四个超链接按钮 -->
+                    <div class="btn-container space-y-4" id="leftButtonsContainer">
+                        <a href="#" class="block glass-effect p-5 rounded-xl flex items-center gap-4 btn-hover shadow-md">
+                            <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                                <i class="fa fa-pencil text-primary text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-lg text-dark">最新文章</h3>
+                                <p class="text-sm text-gray-600">查看我的最新技术分享</p>
+                            </div>
+                        </a>
+                        
+                        <a href="#" class="block glass-effect p-5 rounded-xl flex items-center gap-4 btn-hover shadow-md">
+                            <div class="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center">
+                                <i class="fa fa-folder-open text-secondary text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-lg text-dark">文章分类</h3>
+                                <p class="text-sm text-gray-600">按主题浏览我的文章</p>
+                            </div>
+                        </a>
+                        
+                        <a href="#" class="block glass-effect p-5 rounded-xl flex items-center gap-4 btn-hover shadow-md">
+                            <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center">
+                                <i class="fa fa-tags text-purple-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-lg text-dark">标签云</h3>
+                                <p class="text-sm text-gray-600">按标签快速查找内容</p>
+                            </div>
+                        </a>
+                        
+                        <a href="#" class="block glass-effect p-5 rounded-xl flex items-center gap-4 btn-hover shadow-md">
+                            <div class="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center">
+                                <i class="fa fa-info-circle text-amber-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-lg text-dark">关于我</h3>
+                                <p class="text-sm text-gray-600">了解更多关于我和本站的信息</p>
+                            </div>
+                        </a>
+
+                        <a href="https://beian.miit.gov.cn/" class="block glass-effect p-5 rounded-xl flex items-center gap-4 btn-hover shadow-md">
+                            <div class="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center">
+                                <i class="fa fa-info-circle text-amber-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-lg text-dark">备案信息</h3>
+                                <p class="text-sm text-gray-600">京ICP备xxxxxxx号</p>
+                                <p class="text-sm text-gray-600">京公网安备xxxxxxxxxxx号</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 右侧内容：博客简介 -->
+                <div class="w-full md:w-3/5">
+                    <!-- 新增banner栏 -->
+                    <div class="banner-container mb-6" style="height: clamp(8rem, 20vw, 10rem);">
+                        <div class="banner-slides">
+                            <div class="banner-slide flex items-center justify-center rounded-2xl shadow-lg">
+                                
+                            </div>
+                            <div class="banner-slide flex items-center justify-center rounded-2xl shadow-lg">
+                                <!-- 第二页内容已移除 -->
+                            </div>
+                        </div>
+                        <div class="banner-dots">
+                            <div class="banner-dot active" data-index="0"></div>
+                            <div class="banner-dot" data-index="1"></div>
+                        </div>
+                    </div>
+                    
+
+                    
+                    <div class="glass-effect rounded-2xl card-padding shadow-xl card-hover flex flex-col" id="rightCard">
+
+                        
+                        <div class="space-y-6 text-gray-700 flex-grow">
+                            <p class="text-lg">
+                                👋 你好！欢迎来到我的小站，这里记录了我在技术道路上的探索与思考。
+                            </p>
+                            
+                            <p class="text-lg">
+                                我是一名普通的程序员，日常沉迷于代码世界，喜欢研究各种新技术，也热衷于分享自己的学习心得和实践经验。
+                            </p>
+                            
+                            <p class="text-lg">
+                                博客主要涵盖以下几个方面的内容：
+                            </p>
+                            
+                            <ul class="list-disc pl-6 space-y-2 text-lg">
+                                <li><span class="font-medium text-primary">前端开发</span> - JavaScript、React、Vue等框架的使用心得</li>
+                                <li><span class="font-medium text-primary">后端技术</span> - Python、Node.js等后端语言的项目实践</li>
+                                <li><span class="font-medium text-primary">开发工具</span> - 提升开发效率的工具和技巧分享</li>
+                                <li><span class="font-medium text-primary">学习资源</span> - 优质技术文章、教程和书籍推荐</li>
+                            </ul>
+                            
+                            <p class="text-lg">
+                                这里没有高深的理论，更多的是我在实际项目中遇到的问题和解决方案，希望能对同样在学习路上你的我有所帮助。
+                            </p>
+                            
+                            <p class="text-lg">
+                                如果你对某个话题感兴趣，或者有任何问题想交流，欢迎通过下方的联系方式找到我。期待与你一起探讨技术，共同进步！
+                            </p>
+                        </div>
+                        
+                        <div class="mt-6 pt-6 border-t border-gray-200/50">
+                            <h3 class="text-xl font-semibold mb-4 text-dark">关注我</h3>
+                            <div class="flex flex-wrap gap-4">
+                                <a href="#" class="social-icon rounded-full bg-gray-100/70 flex items-center justify-center hover:bg-primary/10 transition-colors">
+                                    <i class="fa fa-github text-xl text-gray-700 hover:text-primary"></i>
+                                </a>
+                                <a href="#" class="social-icon rounded-full bg-gray-100/70 flex items-center justify-center hover:bg-blue-100 transition-colors">
+                                    <i class="fa fa-twitter text-xl text-gray-700 hover:text-blue-500"></i>
+                                </a>
+                                <a href="#" class="social-icon rounded-full bg-gray-100/70 flex items-center justify-center hover:bg-red-100 transition-colors">
+                                    <i class="fa fa-youtube-play text-xl text-gray-700 hover:text-red-500"></i>
+                                </a>
+                                <a href="#" class="social-icon rounded-full bg-gray-100/70 flex items-center justify-center hover:bg-blue-100 transition-colors">
+                                    <i class="fa fa-linkedin text-xl text-gray-700 hover:text-blue-700"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+
+        
+        <script>
+
+            
+
+            
+            // 允许页面滚动
+            document.addEventListener('wheel', function(e) {
+                // 允许默认滚动行为
+            }, { passive: true });
+            
+            // 禁止右键菜单
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+            });
+            
+            // 禁止选择文本
+            document.addEventListener('selectstart', function(e) {
+                e.preventDefault();
+            });
+            
+            // 禁止复制
+            document.addEventListener('copy', function(e) {
+                e.preventDefault();
+            });
+            
+            // 移除未使用的handleResize函数
+            
+            // 平滑滚动效果
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // 导航栏滚动效果
+            window.addEventListener('scroll', () => {
+                const scrollPosition = window.scrollY;
+                
+                // 可以在这里添加导航栏样式变化的逻辑
+                // 例如：当滚动超过一定距离时，改变导航栏背景颜色
+            });
+            
+            // banner自动切换
+            let currentBannerIndex = 0;
+            const bannerSlides = document.querySelector('.banner-slides');
+            const bannerSlidesCount = document.querySelectorAll('.banner-slide').length;
+            const bannerDots = document.querySelectorAll('.banner-dot');
+            
+            function updateBanner() {
+                bannerSlides.style.transform = `translateY(-${currentBannerIndex * 100}%)`;
+                bannerDots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === currentBannerIndex);
+                });
+            }
+            
+            // 自动切换
+            setInterval(() => {
+                currentBannerIndex = (currentBannerIndex + 1) % bannerSlidesCount;
+                updateBanner();
+            }, 5000);
+            
+            // 点击圆点切换
+            bannerDots.forEach(dot => {
+                dot.addEventListener('click', () => {
+                    currentBannerIndex = parseInt(dot.dataset.index);
+                    updateBanner();
+                });
+            });
+        </script>
+
+</body>
+</html>
